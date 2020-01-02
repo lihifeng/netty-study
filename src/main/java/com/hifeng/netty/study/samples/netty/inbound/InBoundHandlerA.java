@@ -1,4 +1,4 @@
-package com.hifeng.netty.study.samples.netty;
+package com.hifeng.netty.study.samples.netty.inbound;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -6,10 +6,10 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 /**
  * @author lzh
  */
-public class InBoundHandlerB extends ChannelInboundHandlerAdapter {
+public class InBoundHandlerA extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("InBoundHandlerB:"+msg);
+        System.out.println("InBoundHandlerA:"+msg);
         super.channelRead(ctx, msg);
     }
 }

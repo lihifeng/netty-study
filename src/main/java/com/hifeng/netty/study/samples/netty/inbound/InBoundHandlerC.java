@@ -1,4 +1,4 @@
-package com.hifeng.netty.study.samples.netty;
+package com.hifeng.netty.study.samples.netty.inbound;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

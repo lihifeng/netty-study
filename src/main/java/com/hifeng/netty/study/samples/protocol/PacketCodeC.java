@@ -7,7 +7,6 @@ import com.hifeng.netty.study.samples.protocol.response.LoginResponsePacket;
 import com.hifeng.netty.study.samples.protocol.response.MessageResponsePacket;
 import com.hifeng.netty.study.samples.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +32,7 @@ public class PacketCodeC {
         serializerMap.put(Serializer.JSON_SERIALIZER, Serializer.DEFAULT);
     }
 
-    public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet) {
-        ByteBuf byteBuf = byteBufAllocator.ioBuffer();
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
 
         byteBuf.writeInt(MAGIC_NUMBER);

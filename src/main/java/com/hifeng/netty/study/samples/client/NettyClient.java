@@ -1,10 +1,12 @@
 package com.hifeng.netty.study.samples.client;
 
-import com.hifeng.netty.study.samples.protocol.PacketCodeC;
+import com.hifeng.netty.study.samples.client.handler.LoginResponseHandler;
+import com.hifeng.netty.study.samples.client.handler.MessageResponseHandler;
+import com.hifeng.netty.study.samples.codec.PacketDecoder;
+import com.hifeng.netty.study.samples.codec.PacketEncoder;
 import com.hifeng.netty.study.samples.protocol.request.MessageRequestPacket;
 import com.hifeng.netty.study.samples.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -35,7 +37,10 @@ public class NettyClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, HOST, PORT, MAX_RETRY);
@@ -68,8 +73,7 @@ public class NettyClient {
                     String line = scanner.nextLine();
                     MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
                     messageRequestPacket.setMessage(line);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), messageRequestPacket);
-                    channel.writeAndFlush(byteBuf);
+                    channel.writeAndFlush(messageRequestPacket);
                 }
             }
         }).start();

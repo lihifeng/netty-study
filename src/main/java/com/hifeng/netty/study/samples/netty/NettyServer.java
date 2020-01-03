@@ -1,11 +1,8 @@
 package com.hifeng.netty.study.samples.netty;
 
-import com.hifeng.netty.study.samples.netty.inbound.InBoundHandlerA;
-import com.hifeng.netty.study.samples.netty.inbound.InBoundHandlerC;
-import com.hifeng.netty.study.samples.netty.outbound.OutBoundHandlerA;
-import com.hifeng.netty.study.samples.netty.outbound.OutBoundHandlerB;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -45,12 +42,12 @@ public class NettyServer {
 //                            }
 //                        });
 
-//                        ch.pipeline().addLast(new FirstServerHandler());
-                        ch.pipeline().addLast(new InBoundHandlerA());
+                        ch.pipeline().addLast(new FirstServerHandler());
+//                        ch.pipeline().addLast(new InBoundHandlerA());
 //                        ch.pipeline().addLast(new InBoundHandlerB());
-                        ch.pipeline().addLast(new InBoundHandlerC());
-                        ch.pipeline().addLast(new OutBoundHandlerA());
-                        ch.pipeline().addLast(new OutBoundHandlerB());
+//                        ch.pipeline().addLast(new InBoundHandlerC());
+//                        ch.pipeline().addLast(new OutBoundHandlerA());
+//                        ch.pipeline().addLast(new OutBoundHandlerB());
 //                        ch.pipeline().addLast(new OutBoundHandlerC());
                     }
                 });

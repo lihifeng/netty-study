@@ -13,6 +13,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -37,6 +38,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
@@ -52,6 +54,12 @@ public class NettyClient {
                 System.out.println(new Date() + ": 连接成功");
                 Channel channel = ((ChannelFuture) future).channel();
                 startConsoleThread(channel);
+
+//                for (int i = 0; i < 1000; i++) {
+//                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
+//                    messageRequestPacket.setMessage("你好，欢迎关注我的微信公众号，《geeker90的博客》!");
+//                    channel.writeAndFlush(messageRequestPacket);
+//                }
             } else if (retry == 0) {
                 System.err.println(new Date() + ": 重试次数已用完，放弃连接");
             } else {

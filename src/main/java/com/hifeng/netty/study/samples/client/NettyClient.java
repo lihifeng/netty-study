@@ -5,7 +5,6 @@ import com.hifeng.netty.study.samples.client.handler.MessageResponseHandler;
 import com.hifeng.netty.study.samples.codec.PacketDecoder;
 import com.hifeng.netty.study.samples.codec.PacketEncoder;
 import com.hifeng.netty.study.samples.protocol.request.MessageRequestPacket;
-import com.hifeng.netty.study.samples.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -75,14 +74,12 @@ public class NettyClient {
     private static void startConsoleThread(Channel channel) {
         new Thread(()->{
             while(!Thread.interrupted()){
-                if(LoginUtil.hasLogin(channel)){
-                    System.out.println("输入消息发送至服务端：");
-                    Scanner scanner = new Scanner(System.in);
-                    String line = scanner.nextLine();
-                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                    messageRequestPacket.setMessage(line);
-                    channel.writeAndFlush(messageRequestPacket);
-                }
+                System.out.println("输入消息发送至服务端：");
+                Scanner scanner = new Scanner(System.in);
+                String line = scanner.nextLine();
+                MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
+                messageRequestPacket.setMessage(line);
+                channel.writeAndFlush(messageRequestPacket);
             }
         }).start();
     }

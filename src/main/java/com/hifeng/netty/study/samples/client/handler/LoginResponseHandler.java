@@ -2,7 +2,6 @@ package com.hifeng.netty.study.samples.client.handler;
 
 import com.hifeng.netty.study.samples.protocol.request.LoginRequestPacket;
 import com.hifeng.netty.study.samples.protocol.response.LoginResponsePacket;
-import com.hifeng.netty.study.samples.util.LoginUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -21,14 +20,13 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         loginRequestPacket.setUserId(UUID.randomUUID().toString());
         loginRequestPacket.setUserName("zhangsan");
         loginRequestPacket.setPassword("123456");
-        ctx.channel().writeAndFlush(loginRequestPacket);
+//        ctx.channel().writeAndFlush(loginRequestPacket);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket loginResponsePacket) {
         if(loginResponsePacket.isSuccess()){
             System.out.println(new Date()+": 客户端登录成功");
-            LoginUtil.markAsLogin(ctx.channel());
         }else{
             System.out.println(new Date()+": 客户端登录失败，原因:"+loginResponsePacket.getReason());
         }

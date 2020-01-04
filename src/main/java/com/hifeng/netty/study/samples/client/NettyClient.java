@@ -4,7 +4,9 @@ import com.hifeng.netty.study.samples.client.handler.LoginResponseHandler;
 import com.hifeng.netty.study.samples.client.handler.MessageResponseHandler;
 import com.hifeng.netty.study.samples.codec.PacketDecoder;
 import com.hifeng.netty.study.samples.codec.PacketEncoder;
+import com.hifeng.netty.study.samples.protocol.request.LoginRequestPacket;
 import com.hifeng.netty.study.samples.protocol.request.MessageRequestPacket;
+import com.hifeng.netty.study.samples.util.SessionUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -50,15 +52,9 @@ public class NettyClient {
     private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
-                System.out.println(new Date() + ": 连接成功");
+                System.out.println(new Date() + ": 连接成功，启动控制台线程……");
                 Channel channel = ((ChannelFuture) future).channel();
                 startConsoleThread(channel);
-
-//                for (int i = 0; i < 1000; i++) {
-//                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-//                    messageRequestPacket.setMessage("你好，欢迎关注我的微信公众号，《geeker90的博客》!");
-//                    channel.writeAndFlush(messageRequestPacket);
-//                }
             } else if (retry == 0) {
                 System.err.println(new Date() + ": 重试次数已用完，放弃连接");
             } else {
@@ -72,16 +68,33 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        Scanner scanner = new Scanner(System.in);
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
         new Thread(()->{
             while(!Thread.interrupted()){
-                System.out.println("输入消息发送至服务端：");
-                Scanner scanner = new Scanner(System.in);
-                String line = scanner.nextLine();
-                MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                messageRequestPacket.setMessage(line);
-                channel.writeAndFlush(messageRequestPacket);
+
+                if(!SessionUtils.hasLogin(channel)){
+                    System.out.print("请输入用户名: ");
+                    String userName = scanner.nextLine();
+                    loginRequestPacket.setUserName(userName);
+                    loginRequestPacket.setPassword("pwd");
+                    channel.writeAndFlush(loginRequestPacket);
+                    waitForLoginResponse();
+                }else{
+                    String toUserId = scanner.next();
+                    String message = scanner.next();
+                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                }
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -11,7 +11,6 @@ import static com.hifeng.netty.study.samples.protocol.command.Command.LOGIN_REQU
 @Data
 public class LoginRequestPacket extends Packet {
 
-    private String userId;
     private String userName;
     private String password;
 

@@ -2,7 +2,7 @@ package com.hifeng.netty.study.samples.server;
 
 import com.hifeng.netty.study.samples.codec.PacketDecoder;
 import com.hifeng.netty.study.samples.codec.PacketEncoder;
-import com.hifeng.netty.study.samples.codec.Spliter;
+import com.hifeng.netty.study.samples.server.handler.LifeCyCleTestHandler;
 import com.hifeng.netty.study.samples.server.handler.LoginRequestHandler;
 import com.hifeng.netty.study.samples.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -33,8 +33,10 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new Spliter());
+
+//                        ch.pipeline().addLast(new Spliter());
 //                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        ch.pipeline().addLast(new LifeCyCleTestHandler());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());

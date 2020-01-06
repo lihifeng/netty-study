@@ -3,6 +3,7 @@ package com.hifeng.netty.study.samples.util;
 import com.hifeng.netty.study.samples.attribute.Attributes;
 import com.hifeng.netty.study.samples.session.Session;
 import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SessionUtils {
     private static final Map<String, Channel> USERID_CHANNEL_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, ChannelGroup> GROUPID_CHANNEL_GROUP_MAP = new ConcurrentHashMap<>();
 
     private SessionUtils() {}
 
@@ -22,8 +24,10 @@ public class SessionUtils {
 
     public static void unbindSession(Channel channel) {
         if(hasLogin(channel)){
-            USERID_CHANNEL_MAP.remove(getSession(channel).getUserId());
+            Session session = getSession(channel);
+            USERID_CHANNEL_MAP.remove(session.getUserId());
             channel.attr(Attributes.SESSION).set(null);
+            System.out.println(session+"退出登录!");
         }
 
     }
@@ -38,6 +42,14 @@ public class SessionUtils {
 
     public static Channel getChannel(String userId) {
         return  USERID_CHANNEL_MAP.get(userId);
+    }
+
+    public static void bindChannelGroup(String groupId, ChannelGroup channelGroup) {
+        GROUPID_CHANNEL_GROUP_MAP.put(groupId, channelGroup);
+    }
+
+    public static ChannelGroup getChannelGroup(String groupId) {
+        return GROUPID_CHANNEL_GROUP_MAP.get(groupId);
     }
 
 }

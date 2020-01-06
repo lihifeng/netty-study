@@ -1,19 +1,14 @@
 package com.hifeng.netty.study.samples.protocol;
 
-import com.hifeng.netty.study.samples.protocol.command.Command;
-import com.hifeng.netty.study.samples.protocol.request.CreateGroupRequestPacket;
-import com.hifeng.netty.study.samples.protocol.request.LoginRequestPacket;
-import com.hifeng.netty.study.samples.protocol.request.LogoutRequestPacket;
-import com.hifeng.netty.study.samples.protocol.request.MessageRequestPacket;
-import com.hifeng.netty.study.samples.protocol.response.CreateGroupResponsePacket;
-import com.hifeng.netty.study.samples.protocol.response.LoginResponsePacket;
-import com.hifeng.netty.study.samples.protocol.response.LogoutResponsePacket;
-import com.hifeng.netty.study.samples.protocol.response.MessageResponsePacket;
+import com.hifeng.netty.study.samples.protocol.request.*;
+import com.hifeng.netty.study.samples.protocol.response.*;
 import com.hifeng.netty.study.samples.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.hifeng.netty.study.samples.protocol.command.Command.*;
 
 /**
  * @author lzh
@@ -29,14 +24,21 @@ public class PacketCodeC {
         packetTypeMap = new HashMap<>();
         serializerMap = new HashMap<>();
 
-        packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
-        packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
-        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
-        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
-        packetTypeMap.put(Command.LOGOUT_REQUEST, LogoutRequestPacket.class);
-        packetTypeMap.put(Command.LOGOUT_RESPONSE, LogoutResponsePacket.class);
-        packetTypeMap.put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
-        packetTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(LOGOUT_REQUEST, LogoutRequestPacket.class);
+        packetTypeMap.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
+        packetTypeMap.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
+        packetTypeMap.put(LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
+        packetTypeMap.put(JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        packetTypeMap.put(JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        packetTypeMap.put(QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+
         serializerMap.put(Serializer.JSON_SERIALIZER, Serializer.DEFAULT);
     }
 

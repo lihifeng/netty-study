@@ -2,10 +2,7 @@ package com.hifeng.netty.study.samples.client;
 
 import com.hifeng.netty.study.samples.client.console.ConsoleCommandManager;
 import com.hifeng.netty.study.samples.client.console.LoginConsoleCommand;
-import com.hifeng.netty.study.samples.client.handler.CreateGroupResponseHandler;
-import com.hifeng.netty.study.samples.client.handler.LoginResponseHandler;
-import com.hifeng.netty.study.samples.client.handler.LogoutResponseHandler;
-import com.hifeng.netty.study.samples.client.handler.MessageResponseHandler;
+import com.hifeng.netty.study.samples.client.handler.*;
 import com.hifeng.netty.study.samples.codec.PacketDecoder;
 import com.hifeng.netty.study.samples.codec.PacketEncoder;
 import com.hifeng.netty.study.samples.codec.Spliter;
@@ -47,6 +44,9 @@ public class NettyClient {
                         ch.pipeline().addLast(new LogoutResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
+                        ch.pipeline().addLast(new JoinGroupResponseHandler());
+                        ch.pipeline().addLast(new QuitGroupResponseHandler());
+                        ch.pipeline().addLast(new ListGroupMembersResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });

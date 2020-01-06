@@ -3,6 +3,7 @@ package com.hifeng.netty.study.im.server.handler;
 import com.hifeng.netty.study.im.protocol.request.GroupMessageRequestPacket;
 import com.hifeng.netty.study.im.protocol.response.GroupMessageResponsePacket;
 import com.hifeng.netty.study.im.util.SessionUtils;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -10,7 +11,11 @@ import io.netty.channel.group.ChannelGroup;
 /**
  * @author lzh
  */
+@Sharable
 public class GroupMessageRequestHandler extends SimpleChannelInboundHandler<GroupMessageRequestPacket> {
+
+    public static final GroupMessageRequestHandler INSTANCE = new GroupMessageRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupMessageRequestPacket requestPacket) throws Exception {
         String groupId = requestPacket.getToGroupId();

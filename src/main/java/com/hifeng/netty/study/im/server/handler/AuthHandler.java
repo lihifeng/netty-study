@@ -1,13 +1,18 @@
 package com.hifeng.netty.study.im.server.handler;
 
 import com.hifeng.netty.study.im.util.SessionUtils;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * @author lzh
  */
+@Sharable
 public class AuthHandler extends ChannelInboundHandlerAdapter {
+
+    public static final AuthHandler INSTANCE = new AuthHandler();
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if(!SessionUtils.hasLogin(ctx.channel())){

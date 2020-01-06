@@ -3,8 +3,7 @@ package com.hifeng.netty.study.im.client;
 import com.hifeng.netty.study.im.client.console.ConsoleCommandManager;
 import com.hifeng.netty.study.im.client.console.LoginConsoleCommand;
 import com.hifeng.netty.study.im.client.handler.*;
-import com.hifeng.netty.study.im.codec.PacketDecoder;
-import com.hifeng.netty.study.im.codec.PacketEncoder;
+import com.hifeng.netty.study.im.codec.PacketCodecHandler;
 import com.hifeng.netty.study.im.codec.Spliter;
 import com.hifeng.netty.study.im.util.SessionUtils;
 import io.netty.bootstrap.Bootstrap;
@@ -39,7 +38,7 @@ public class NettyClient {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
                         ch.pipeline().addLast(new Spliter());
-                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new LogoutResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
@@ -48,7 +47,6 @@ public class NettyClient {
                         ch.pipeline().addLast(new JoinGroupResponseHandler());
                         ch.pipeline().addLast(new QuitGroupResponseHandler());
                         ch.pipeline().addLast(new ListGroupMembersResponseHandler());
-                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, HOST, PORT, MAX_RETRY);

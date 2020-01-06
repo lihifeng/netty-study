@@ -5,6 +5,7 @@ import com.hifeng.netty.study.im.protocol.response.LoginResponsePacket;
 import com.hifeng.netty.study.im.session.Session;
 import com.hifeng.netty.study.im.util.IDUtils;
 import com.hifeng.netty.study.im.util.SessionUtils;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -13,11 +14,14 @@ import java.util.Date;
 /**
  * @author lzh
  */
+@Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) {
-        ctx.channel().writeAndFlush(login(ctx, loginRequestPacket));
+        ctx.writeAndFlush(login(ctx, loginRequestPacket));
     }
 
     @Override

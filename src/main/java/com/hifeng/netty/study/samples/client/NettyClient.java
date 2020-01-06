@@ -1,11 +1,14 @@
 package com.hifeng.netty.study.samples.client;
 
+import com.hifeng.netty.study.samples.client.console.ConsoleCommandManager;
+import com.hifeng.netty.study.samples.client.console.LoginConsoleCommand;
+import com.hifeng.netty.study.samples.client.handler.CreateGroupResponseHandler;
 import com.hifeng.netty.study.samples.client.handler.LoginResponseHandler;
+import com.hifeng.netty.study.samples.client.handler.LogoutResponseHandler;
 import com.hifeng.netty.study.samples.client.handler.MessageResponseHandler;
 import com.hifeng.netty.study.samples.codec.PacketDecoder;
 import com.hifeng.netty.study.samples.codec.PacketEncoder;
-import com.hifeng.netty.study.samples.protocol.request.LoginRequestPacket;
-import com.hifeng.netty.study.samples.protocol.request.MessageRequestPacket;
+import com.hifeng.netty.study.samples.codec.Spliter;
 import com.hifeng.netty.study.samples.util.SessionUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -14,7 +17,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -39,10 +41,12 @@ public class NettyClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new LogoutResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new CreateGroupResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -68,33 +72,20 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
         Scanner scanner = new Scanner(System.in);
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
         new Thread(()->{
             while(!Thread.interrupted()){
-
                 if(!SessionUtils.hasLogin(channel)){
-                    System.out.print("请输入用户名: ");
-                    String userName = scanner.nextLine();
-                    loginRequestPacket.setUserName(userName);
-                    loginRequestPacket.setPassword("pwd");
-                    channel.writeAndFlush(loginRequestPacket);
-                    waitForLoginResponse();
+                    loginConsoleCommand.exec(scanner, channel);
                 }else{
-                    String toUserId = scanner.next();
-                    String message = scanner.next();
-                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                    consoleCommandManager.exec(scanner, channel);
                 }
             }
         }).start();
     }
 
-    private static void waitForLoginResponse() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 }

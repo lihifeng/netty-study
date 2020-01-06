@@ -3,12 +3,12 @@ package com.hifeng.netty.study.samples.server.handler;
 import com.hifeng.netty.study.samples.protocol.request.LoginRequestPacket;
 import com.hifeng.netty.study.samples.protocol.response.LoginResponsePacket;
 import com.hifeng.netty.study.samples.session.Session;
+import com.hifeng.netty.study.samples.util.IDUtils;
 import com.hifeng.netty.study.samples.util.SessionUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * @author lzh
@@ -32,7 +32,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
         if (valid(loginRequestPacket)) {
             loginResponsePacket.setSuccess(true);
-            String userId = randomUserId();
+            String userId = IDUtils.randomId();
             loginResponsePacket.setUserId(userId);
             SessionUtils.bindSession(new Session(userId, loginRequestPacket.getUserName()), ctx.channel());
             System.out.println("["+loginRequestPacket.getUserName()+"]登录成功");
@@ -48,7 +48,5 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         return true;
     }
 
-    private static String randomUserId() {
-        return UUID.randomUUID().toString().split("-")[0];
-    }
+
 }

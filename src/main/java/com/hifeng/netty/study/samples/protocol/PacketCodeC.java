@@ -1,9 +1,13 @@
 package com.hifeng.netty.study.samples.protocol;
 
 import com.hifeng.netty.study.samples.protocol.command.Command;
+import com.hifeng.netty.study.samples.protocol.request.CreateGroupRequestPacket;
 import com.hifeng.netty.study.samples.protocol.request.LoginRequestPacket;
+import com.hifeng.netty.study.samples.protocol.request.LogoutRequestPacket;
 import com.hifeng.netty.study.samples.protocol.request.MessageRequestPacket;
+import com.hifeng.netty.study.samples.protocol.response.CreateGroupResponsePacket;
 import com.hifeng.netty.study.samples.protocol.response.LoginResponsePacket;
+import com.hifeng.netty.study.samples.protocol.response.LogoutResponsePacket;
 import com.hifeng.netty.study.samples.protocol.response.MessageResponsePacket;
 import com.hifeng.netty.study.samples.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
@@ -29,6 +33,10 @@ public class PacketCodeC {
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
         packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
         packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(Command.LOGOUT_REQUEST, LogoutRequestPacket.class);
+        packetTypeMap.put(Command.LOGOUT_RESPONSE, LogoutResponsePacket.class);
+        packetTypeMap.put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
         serializerMap.put(Serializer.JSON_SERIALIZER, Serializer.DEFAULT);
     }
 

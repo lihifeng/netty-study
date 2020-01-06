@@ -2,7 +2,11 @@ package com.hifeng.netty.study.im.server;
 
 import com.hifeng.netty.study.im.codec.PacketCodecHandler;
 import com.hifeng.netty.study.im.codec.Spliter;
-import com.hifeng.netty.study.im.server.handler.*;
+import com.hifeng.netty.study.im.handler.IMIdleStateHandler;
+import com.hifeng.netty.study.im.server.handler.AuthHandler;
+import com.hifeng.netty.study.im.server.handler.HeartbeatRequestHandler;
+import com.hifeng.netty.study.im.server.handler.IMHandler;
+import com.hifeng.netty.study.im.server.handler.LoginRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -31,9 +35,11 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
+                        ch.pipeline().addLast(new IMIdleStateHandler());
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(HeartbeatRequestHandler.INSTANCE);
                         ch.pipeline().addLast(AuthHandler.INSTANCE);
                         ch.pipeline().addLast(IMHandler.INSTANCE);
                     }

@@ -5,6 +5,7 @@ import com.hifeng.netty.study.im.client.console.LoginConsoleCommand;
 import com.hifeng.netty.study.im.client.handler.*;
 import com.hifeng.netty.study.im.codec.PacketCodecHandler;
 import com.hifeng.netty.study.im.codec.Spliter;
+import com.hifeng.netty.study.im.handler.IMIdleStateHandler;
 import com.hifeng.netty.study.im.util.SessionUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -37,6 +38,9 @@ public class NettyClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
+
+                        ch.pipeline().addLast(new IMIdleStateHandler());
+
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         ch.pipeline().addLast(new LoginResponseHandler());
@@ -47,6 +51,7 @@ public class NettyClient {
                         ch.pipeline().addLast(new JoinGroupResponseHandler());
                         ch.pipeline().addLast(new QuitGroupResponseHandler());
                         ch.pipeline().addLast(new ListGroupMembersResponseHandler());
+                        ch.pipeline().addLast(new HeartbeatTimerHandler());
                     }
                 });
         connect(bootstrap, HOST, PORT, MAX_RETRY);

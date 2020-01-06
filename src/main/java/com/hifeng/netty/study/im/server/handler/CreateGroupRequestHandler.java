@@ -2,6 +2,7 @@ package com.hifeng.netty.study.im.server.handler;
 
 import com.hifeng.netty.study.im.protocol.request.CreateGroupRequestPacket;
 import com.hifeng.netty.study.im.protocol.response.CreateGroupResponsePacket;
+import com.hifeng.netty.study.im.session.Session;
 import com.hifeng.netty.study.im.util.IDUtils;
 import com.hifeng.netty.study.im.util.SessionUtils;
 import io.netty.channel.Channel;
@@ -26,7 +27,10 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
     protected void channelRead0(ChannelHandlerContext ctx, CreateGroupRequestPacket createGroupRequestPacket) throws Exception {
         List<String> userIdList = createGroupRequestPacket.getUserIdList();
         List<String> userNameList = new ArrayList<>();
-
+        Session session = SessionUtils.getSession(ctx.channel());
+        if(!userIdList.contains(session.getUserId())){
+            userIdList.add(session.getUserId());
+        }
         ChannelGroup channelGroup = new DefaultChannelGroup(ctx.executor());
         Channel channel;
         for (String userId : userIdList) {

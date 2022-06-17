@@ -14,7 +14,7 @@
     <properties>
         <java.version>1.8</java.version>
         <netty.version>4.1.44.Final</netty.version>
-        <fastjson.version>1.2.62</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <lombok.version>1.18.10</lombok.version>
         <maven-compile-plugin.version>3.8.1</maven-compile-plugin.version>
     </properties>
